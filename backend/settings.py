@@ -23,10 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-i-b2o_4@ru#jr_y)vbhdjng$607jjufk4i8b+*wrk0p&!ae%-e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','*']
-
+ALLOWED_HOSTS = ['localhost','127.0.0.1','black-hat.herokuapp.com']
 
 # Application definition
 
@@ -204,19 +203,9 @@ JAZZMIN_SETTINGS = {
     # Copyright on the footer
     "copyright": "devloped by bzquatre",
     # List of model admins to search from the search bar, search bar omitted if excluded
-    "order_with_respect_to": ["auth", "website","website.slide", "website.author", "website.book","website.structure","website.despline","website.subdespline"],
-    "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "auth.Group": "fas fa-users",
-        "website.book": "fas fa-book",
-        "website.author":"fas fa-feather",
-        "website.slide":"fa fa-image",
-        "website.structure":"fas fa-store",
-        "website.Discipline":"fa fa-list",
-        "website.subDiscipline":"fa fa-list",
-    },
+    "order_with_respect_to": ["auth", ],
+   
     # override change forms on a per modeladmin basis
-    "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs","website.author": "collapsible"},
+    "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},
     "show_ui_builder": True,
     }
