@@ -1,7 +1,7 @@
 <h1 align=center>E-Commerce Website with Django + React & Redux</h1>
 <h2 align=center>Otaku House - Anime Merchandise and Cosplay Shop</h2>
 
-## ✨ [Live Link - Otaku House](https://otakuhouse.herokuapp.com/)
+## ✨ [Live Link -Black hat](https://bzquatre.pythonanywhere.com/)
 
 ### How to Run 🏃‍♀️
 
