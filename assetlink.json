@@ -1,0 +1,7 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target" : { "namespace": "black_hat", 
+                 "package_name": "com.pythonanywhere.bzquatre.twa",
+                 "sha256_cert_fingerprints": ["1E:FF:A4:40:4E:80:0F:27:08:06:80:EC:74:F1:BE:DD:9C:FF:1E:52:DD:1E:E8:C8:D3:3B:3D:5C:C0:6C:B0:D3"] }
+  }
+]
