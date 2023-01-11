@@ -29,7 +29,7 @@ function Header() {
     dispatch(logout());
   };
 
-  return (
+  return (  
     <header>
       <Navbar  bg="light" variant="light" expand="lg" style={{paddingTop:"0.5rem",paddingBottom:".5rem"}} collapseOnSelect>
         <Container>
@@ -38,12 +38,9 @@ function Header() {
               <img src={logo} alt="Black Hat" width={"50px"}/>
             </Navbar.Brand>
           </LinkContainer>
-
-          <Navbar.Toggle aria-controls="navbarScroll" />
-
+          <SearchBox />
+          <Navbar.Toggle aria-controls="navbarScroll" style={{border:"none",boxShadow: "none"}}/>
           <Navbar.Collapse id="navbarScroll">
-            <SearchBox />
-
             <Nav
               className="ms-auto my-2 my-lg-0"
               style={{ maxHeight: "100px" }}

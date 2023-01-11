@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.fields import BLANK_CHOICE_DASH
+from django.utils.safestring import mark_safe
 # Create your models here.
-
 class Product(models.Model):
     user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     name = models.CharField(max_length=200,null=True,blank=True)
@@ -16,24 +16,66 @@ class Product(models.Model):
     countInStock = models.IntegerField(null=True,blank=True,default=0)
     createdAt = models.DateTimeField(auto_now_add=True)
     _id = models.AutoField(primary_key=True,editable=False)
-
+    def photo(self):
+        return mark_safe('<img src="{}" width="100" />'.format(self.image.url))
     def __str__(self):
         return self.name +" | "+self.brand +" | " + str(self.price)
-
-
 class Review(models.Model):
-    product = models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
-    user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,null=False)
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=False)
     name = models.CharField(max_length=200,null=True,blank=True)
     rating =  models.IntegerField(null=True,blank=True,default=0)
     comment = models.TextField(null=True,blank=True)
     createdAt = models.DateTimeField(auto_now_add=True)
     _id =  models.AutoField(primary_key=True,editable=False)
-
+    def photo(self):
+        return mark_safe('<img src="{}" width="100" />'.format(self.product.image.url))
     def __str__(self):
         return str(self.rating)
-
-
+class Receiving(models.Model):
+    _id =  models.AutoField(primary_key=True,editable=False)
+    user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
+    taxPrice = models.DecimalField(max_digits=12,decimal_places=2,null=True,blank=True)
+    shippingPrice = models.DecimalField(max_digits=12,decimal_places=2,null=True,blank=True)
+    isPaid = models.BooleanField(default=False)
+    paidAt = models.DateTimeField(auto_now_add=False,null=True, blank=True)
+    createdAt = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    def totalPrice(self):
+        items=ReceivingItem.objects.filter(receiving=self._id)
+        return self.taxPrice+self.shippingPrice+sum([item.price*item.qty for item in items])
+    def items(self):
+        items=ReceivingItem.objects.filter(receiving=self._id)
+        table="".join([f"<tr><td>{ object.__str__() }</td><td>{ object.qty }</td><td>{ object.price }</td></tr>" for object in items])
+        return mark_safe(f"""<table class="table table-hover"><thead><tr> <th>Baker Name</th><th>qt</th><th>Product Price</th></tr></thead><tbody>{table}</tbody></table>""")
+    def delete(self, *args, **kwargs):
+        orderitems=ReceivingItem.objects.filter(receiving=self._id)
+        for orderitem in orderitems:
+            orderitem.delete()
+        super(Receiving, self).delete(*args, **kwargs)
+    def __str__(self):
+        return "Receiving N "+str(self._id)
+class ReceivingItem(models.Model):
+    _id =  models.AutoField(primary_key=True,editable=False)
+    product = models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
+    receiving  = models.ForeignKey(Receiving,on_delete=models.SET_NULL,null=True)
+    qty = models.IntegerField(null=True,blank=True,default=0)
+    price = models.DecimalField(max_digits=12,decimal_places=2,null=True,blank=True)
+    def save(self, *args, **kwargs):
+        product=Product.objects.get(pk=self.product._id)
+        if self._state.adding:
+            product.countInStock+=self.qty
+        else:
+            old=ReceivingItem.objects.get(pk=self._id)
+            product.countInStock+=old.qty-self.qty
+        product.save()
+        super(ReceivingItem, self).save(*args, **kwargs)
+    def delete(self, *args, **kwargs):
+        product=Product.objects.get(pk=self.product._id)
+        product.countInStock-=self.qty
+        product.save()
+        super(ReceivingItem, self).delete(*args, **kwargs)
+    def __str__(self):
+        return str(self.product.name)
 class Order(models.Model):
     user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     paymentMethod = models.CharField(max_length=200,null=True,blank=True)
@@ -46,11 +88,23 @@ class Order(models.Model):
     deliveredAt = models.DateTimeField(auto_now_add=False,null=True, blank=True)
     createdAt = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     _id =  models.AutoField(primary_key=True,editable=False)
-
+    def gettotalPrice(self):
+        items=OrderItem.objects.filter(order=self._id)
+        return self.taxPrice+self.shippingPrice+sum([item.price*item.qty for item in items])
+    def items(self):
+        items=OrderItem.objects.filter(order=self._id)
+        table="".join([f"<tr><td>{ object.name }</td><td>{ object.qty }</td><td>{ object.price }</td></tr>" for object in items])
+        return mark_safe(f"""<table class="table table-hover"><thead><tr> <th>Baker Name</th><th>qt</th><th>Product Price</th></tr></thead><tbody>{table}</tbody></table>""")
+    def delete(self, *args, **kwargs):
+        orderitems=OrderItem.objects.filter(order=self._id)
+        for orderitem in orderitems:
+            orderitem.delete()
+        super(Order, self).delete(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        self.totalPrice=self.gettotalPrice()
+        super(Order, self).save(*args, **kwargs)
     def __str__(self):
-        return str(self.createdAt)
-
-
+        return "Order N "+str(self._id)
 class OrderItem(models.Model):
     product = models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
     order  = models.ForeignKey(Order,on_delete=models.SET_NULL,null=True)
@@ -59,12 +113,23 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=12,decimal_places=2,null=True,blank=True)
     image = models.CharField(max_length=200,null=True,blank=True)
     _id =  models.AutoField(primary_key=True,editable=False)
-
+    def save(self, *args, **kwargs):
+        product=Product.objects.get(pk=self.product._id)
+        if self._state.adding:
+            product.countInStock-=self.qty
+        else:
+            old=OrderItem.objects.get(pk=self._id)
+            product.countInStock+=old.qty-self.qty
+        product.save()
+        super(OrderItem, self).save(*args, **kwargs)
+        self.order.save()
+    def delete(self, *args, **kwargs):
+        product=Product.objects.get(pk=self.product._id)
+        product.countInStock+=self.qty
+        product.save()
+        super(OrderItem, self).delete(*args, **kwargs)
     def __str__(self):
         return str(self.name)
-
-
-
 class ShippingAddress(models.Model):
     order = models.OneToOneField(Order,on_delete=models.CASCADE,null=True,blank=True)
     address = models.CharField(max_length=200,null=True,blank=True)
@@ -75,4 +140,4 @@ class ShippingAddress(models.Model):
     _id = models.AutoField(primary_key=True,editable=False)
 
     def __str__(self):
-        return str(self.address)
+        return str(self.order.user.__str__()+' from '+self.address)

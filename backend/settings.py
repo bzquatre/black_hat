@@ -203,7 +203,19 @@ JAZZMIN_SETTINGS = {
     # Copyright on the footer
     "copyright": "devloped by bzquatre",
     # List of model admins to search from the search bar, search bar omitted if excluded
-    "order_with_respect_to": ["auth", ],
+    "order_with_respect_to": ["auth", "base","base.product", "base.review","base.receiving","base.receivingitem", "base.order","base.orderitem","base.shippingaddress"],
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "base.product": "fab fa-product-hunt",
+        "base.review":"fas fa-feather",
+        "base.receiving":"fas fa-box",
+        "base.receivingitem":"fas fa-box-open",
+        "base.order":"fas fa-shopping-cart",
+        "base.orderitem":"fa fa-cart-arrow-down",
+        "base.shippingaddress":"fas fa-map-marker-alt",
+    },
    
     # override change forms on a per modeladmin basis
     "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},

@@ -6,3 +6,23 @@
     background-color: black;
     border-color: black;
 }
+.navbar form .form-control {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom-left-radius: 40px;
+    border-top-left-radius: 40px;
+}
+.navbar form button {
+    border-bottom-right-radius: 40px;
+    border-top-right-radius: 40px;
+}
+.navbar form *:focus {
+    box-shadow: none;
+    
+}
+@media (min-width: 450px){
+form .d-flex
+{
+  max-width: 300px;
+}
+}
