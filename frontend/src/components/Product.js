@@ -5,6 +5,7 @@ import { Card } from "react-bootstrap";
 
 /* REACT ROUTER */
 import { Link } from "react-router-dom";
+import { PRODUCT_TOP_SUCCESS } from "../constants/productConstants";
 
 /* COMPONENTS */
 import Rating from "./Rating";
@@ -13,7 +14,7 @@ function Product({ product }) {
   return (
     <Card className="my-3 p-3 rounded">
       <Link to={`/product/${product._id}`}>
-        <Card.Img src={product.image} />
+        <Card.Img src={process.env.REACT_APP_API_URL+product.image} />
       </Link>
 
       <Card.Body>

@@ -1,5 +1,5 @@
 /* AXIOS */
-import axios from "axios";
+import axios from "./axios";
 
 /* ACTION TYPES */
 import {
@@ -30,7 +30,6 @@ import {
 } from "../constants/userConstants";
 
 import { ORDER_LIST_MY_RESET } from "../constants/orderConstants";
-
 /* ACTION CREATOR USED IN USER LOGIN IN LoginScreen COMPONENT & HEADER */
 export const login = (email, password) => async (dispatch) => {
   try {

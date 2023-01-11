@@ -1,5 +1,5 @@
 /* AXIOS */
-import axios from "axios";
+import axios from "./axios";
 
 /* ACTION TYPES */
 import {
@@ -24,7 +24,6 @@ import {
 } from "../constants/orderConstants";
 
 import { CART_CLEAR_ITEMS } from "../constants/cartConstants";
-
 /* ACTION CREATOR USED IN CREATING ORDER IN PlaceOrderScreen COMPONENT  */
 export const createOrder = (order) => async (dispatch, getState) => {
   try {

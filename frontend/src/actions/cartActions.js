@@ -10,7 +10,7 @@ import {
 } from "../constants/cartConstants";
 
 /* ACTION CREATOR USED IN CartScreen COMPONENT */
-
+axios.defaults.baseURL ="https://bzquatre.pythonanywhere.com/"
 /* FOR ADDING PRODUCTS TO CART */
 export const addToCart = (id, qty) => async (dispatch, getState) => {
   // FETCHING PRODUCT DATA

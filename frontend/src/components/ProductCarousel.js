@@ -18,7 +18,6 @@ import { listTopProducts } from "../actions/productActions";
 
 function ProductCarousel() {
   const dispatch = useDispatch();
-
   /* PULLING A PART OF STATE FROM THE ACTUAL STATE IN THE REDUX STORE */
   const productTopRated = useSelector((state) => state.productTopRated);
   const { error, loading, products } = productTopRated;
@@ -36,7 +35,7 @@ function ProductCarousel() {
       {products.map((product) => (
         <Carousel.Item key={product._id}>
           <Link to={`/product/${product._id}`}>
-            <Image src={product.image} alt={product.name} fluid />
+            <Image src={process.env.REACT_APP_API_URL+product.image} alt={product.name} fluid />
 
             <Carousel.Caption className="carousel.caption">
               <h4>

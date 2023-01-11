@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "proxy": "https://bzquatre.pythonanywhere.com/",
+  "proxy": "",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

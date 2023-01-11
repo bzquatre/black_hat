@@ -1,5 +1,5 @@
 /* AXIOS */
-import axios from "axios";
+import axios from "./axios";
 
 /* ACTION TYPES */
 import {
@@ -25,7 +25,6 @@ import {
   PRODUCT_TOP_FAIL,
   PRODUCT_TOP_REQUEST,
 } from "../constants/productConstants";
-
 /* ACTION CREATOR USED IN HomeScreen COMPONENT */
 export const listProducts =
   (keyword = "") =>
